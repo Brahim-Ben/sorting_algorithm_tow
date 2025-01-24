@@ -1,0 +1,185 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_parcing.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bbenaali <bbenaali@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/08 11:35:46 by bbenaali          #+#    #+#             */
+/*   Updated: 2025/01/23 12:40:02 by bbenaali         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+static int	digit(char *c)
+{
+	int	i;
+
+	i = 0;
+	if (chek_new_line(c))
+		return (0);
+	if ((c[i] == '-' || c[i] == '+') && (c[i + 1] == '-' || c[i + 1] == '+'))
+		return (0);
+	while (c[i] != '\0' && ((c[i] >= '0' && c[i] <= '9')
+			|| ((c[i] == '-' || c[i] == '+') && (c[i - 1] == ' ' || i == 0)
+				&& (c[i + 1] >= '0' && c[i + 1] <= '9' )) || c[i] == ' '))
+		i++;
+	if (ft_strlen(c) == i)
+		return (1);
+	else
+		return (0);
+}
+
+static int	count_elements(char **argv)
+{
+	int		i;
+	int		c;
+	int		x;
+	char	**split;
+
+	i = 1;
+	c = 0;
+	while (argv[i] != NULL)
+	{
+		x = 0;
+		split = ft_split(argv[i], ' ');
+		if (!split)
+		{
+			write(1, "Error\n", 6);
+			return (1);
+		}
+		while (split[x] != NULL)
+		{
+			free(split[x++]);
+			c++;
+		}
+		free(split);
+		i++;
+	}
+	return (c);
+}
+
+static void	fill_array(int *b, char **argv)
+{
+	int		i;
+	int		x;
+	char	**split;
+
+	i = 1;
+	while (argv[i] != NULL)
+	{
+		x = 0;
+		split = ft_split(argv[i], ' ');
+		if (!split)
+		{
+			write(1, "error\n", 6);
+			return ;
+		}
+		while (split[x] != NULL)
+		{
+			*b = ft_atoi(split[x]);
+			b++;
+			free(split[x]);
+			x++;
+		}
+		free(split);
+		i++;
+	}
+}
+
+int	main(int argc, char **argv)
+{
+	int	i;
+	int	c;
+	int	*b;
+
+	c = 0;
+	i = 1;
+	if (argc < 2)
+		return (0);
+	while (argv[i] != NULL && digit(argv[i]))
+		i++;
+	if (i != argc)
+		return (write(2, "Error\n", 6), 1);
+	c = count_elements(argv);
+	b = (int *)malloc(sizeof(int) * c);
+	if (!b)
+		return (1);
+	fill_array(b, argv);
+	ft_check_double_number(b, c);
+	put_in_node(b, c);
+	free(b);
+	return (0);
+}
+
+// int main(int ac, char *av[])
+// {
+//     return (push_swap(ac, av));
+// }
+
+// int  main(int argc, char *argv[])
+// {
+//     int i;
+//     int j;
+//     char **split;
+//     int x;
+//     int *first;
+//     int c;
+
+//     i = 1;
+//     if(argc < 2)
+//         return (0);
+//     while (argv[i] != NULL && digit(argv[i]))
+//         i++;
+//     if(i != argc)
+//         return(write(1, "Error\n", 6), 1);
+//     i = 1;
+//     c = 0;
+
+//     while(argv[i] != NULL)
+//     {
+//         j = 0;
+//         x = 0;
+//         split = ft_split(argv[i], ' ');
+//         while(split[x] != NULL)
+//         {
+//             free(split[x]);
+//             x++;
+//             c++;
+//         }
+//         free(split);
+//         i++;
+//     }
+//     i = 1;
+//     int *b;
+//     b = (int *)malloc(sizeof(int) * c);
+//     first = b;
+//     c = 0;
+
+//     while(argc >= 2 && argv[i] != NULL)
+//     {
+//         j = 0;
+//         x = 0;
+//         split = ft_split(argv[i], ' ');
+//         while(split[x] != NULL)
+//         {
+//             *b = ft_atoi(split[x],first);
+//             b++;
+//             free(split[x]);
+//             x++;
+//             c++;
+//         }
+//         free(split);
+//         i++;
+//     }
+
+//     b = first;
+//     ft_check_double_number(b, c);
+//     put_in_node(b, c);
+//     return(0);
+// }
+// int main(int ac, char *av[])
+// {
+//     push_swap(ac, &av);
+// }
